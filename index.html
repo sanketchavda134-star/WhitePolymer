@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>White Polymer Industries</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      color: #111827;
+      line-height: 1.6;
+      background: #ffffff;
+      scroll-behavior: smooth;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+
+    .container {
+      width: min(90%, 1100px);
+      margin: 0 auto;
+    }
+
+    /* ---------- SPLASH INTRO ---------- */
+
+    .splash-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, #e5f7ec 0%, #ffffff 45%, #e5f3ff 100%);
+      color: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 9999;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+      overflow: hidden;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right)
+               env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+
+    .splash-overlay::before {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(37,211,102,0.18), transparent 70%);
+      top: -80px;
+      left: -80px;
+      filter: blur(2px);
+      animation: floatBlob 10s ease-in-out infinite alternate;
+    }
+
+    .splash-overlay::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(34,197,94,0.18), transparent 70%);
+      bottom: -70px;
+      right: -60px;
+      filter: blur(2px);
+      animation: floatBlob 12s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes floatBlob {
+      from { transform: translate3d(0,0,0) scale(1); }
+      to   { transform: translate3d(20px,-10px,0) scale(1.05); }
+    }
+
+    .splash-hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .splash-logo-box {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.3rem 1.5rem 1.6rem;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 20px 45px rgba(15,23,42,0.18);
+      backdrop-filter: blur(14px);
+      transform: translateY(12px) scale(0.96);
+      opacity: 0;
+      z-index: 1;
+      pointer-events: none;
+      max-width: min(90vw, 360px);
+    }
+
+    .splash-logo-box.show-logo {
+      animation: cardIn 0.8s ease-out forwards;
+      pointer-events: auto;
+    }
+
+    @keyframes cardIn {
+      0%   { opacity: 0; transform: translateY(18px) scale(0.96); }
+      60%  { opacity: 1; transform: translateY(0) scale(1.01); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .splash-logo-box img {
+      height: clamp(60px, 18vw, 90px);
+      width: auto;
+      filter: drop-shadow(0 6px 18px rgba(15,23,42,0.35));
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    .splash-logo-box.show-logo img {
+      animation: logoFade 0.6s ease-out 0.15s forwards;
+    }
+
+    @keyframes logoFade {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .splash-name {
+      font-size: clamp(1rem, 3.2vw, 1.4rem);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #25d366;
+      opacity: 0;
+      transform: translateY(6px);
+      text-align: center;
+    }
+
+    .splash-logo-box.show-logo .splash-name {
+      animation: nameFade 0.6s ease-out 0.3s forwards;
+    }
+
+    @keyframes nameFade {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .splash-tagline {
+      margin-top: 0.4rem;
+      font-size: clamp(0.8rem, 2.6vw, 0.95rem);
+      opacity: 0;
+      max-width: 260px;
+      text-align: center;
+    }
+
+    .splash-logo-box.show-logo .splash-tagline {
+      animation: taglineFade 0.7s ease-out 0.45s forwards;
+    }
+
+    @keyframes taglineFade {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .splash-year {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 1rem;
+      font-size: clamp(2.4rem, 10vw, 4.2rem);
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      opacity: 0;
+      pointer-events: none;
+      text-transform: uppercase;
+      color: #16a34a;
+      text-shadow:
+        0 0 6px rgba(255,255,255,0.95),
+        0 0 18px rgba(34,197,94,0.7);
+      mix-blend-mode: normal;
+      animation: yearIntroThenFade 2s ease-out forwards;
+    }
+
+    @keyframes yearIntroThenFade {
+      0% { opacity: 0; transform: scale(0.9) translateY(8px); }
+      30% { opacity: 1; transform: scale(1.02) translateY(0); }
+      60% { opacity: 1; transform: scale(1) translateY(0); }
+      100% { opacity: 0; transform: scale(1) translateY(0); }
+    }
+
+    .splash-spinner {
+      margin-top: 1.2rem;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 3px solid rgba(148,163,184,0.35);
+      border-top-color: #25d366;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ---------- SEARCH OVERLAY ---------- */
+
+    .search-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.96);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9998;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    .search-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .search-overlay-logo {
+      padding: 0.9rem 1.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      box-shadow: 0 0 18px rgba(15,23,42,0.15);
+      background: radial-gradient(circle at 30% 30%, #e5f7ec, #ffffff);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      color: #111827;
+    }
+
+    .search-overlay-text {
+      margin-top: 1.2rem;
+      font-size: 0.9rem;
+      color: #4b5563;
+    }
+
+    .search-overlay-text span {
+      color: #25d366;
+      font-weight: 600;
+    }
+
+    .search-overlay-spinner {
+      margin-top: 1.4rem;
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      border: 3px solid rgba(148,163,184,0.5);
+      border-top-color: #25d366;
+      animation: spin 0.7s linear infinite;
+    }
+
+    /* ---------- HEADER / REST OF SITE ---------- */
+
+    .site-header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 0;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: clamp(48px, 10vw, 60px);
+      height: clamp(48px, 10vw, 60px);
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #e5f7ec, #ffffff);
+      border: 1px solid rgba(148,163,184,0.35);
+      box-shadow: 0 0 12px rgba(15,23,42,0.15);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .logo img {
+      height: clamp(36px, 8vw, 46px);
+      width: auto;
+      display: block;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-left: auto;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: #f3f4f6;
+      border-radius: 999px;
+      padding: 4px 10px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .search-input {
+      background: transparent;
+      border: none;
+      color: #111827;
+      font-size: 0.85rem;
+      outline: none;
+      width: min(38vw, 150px);
+    }
+
+    .search-input::placeholder { color: #9ca3af; }
+
+    .search-icon {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #25d366;
+      border-radius: 50%;
+      position: relative;
+      margin-left: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .search-icon::after {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 2px;
+      background: #25d366;
+      border-radius: 2px;
+      right: -4px;
+      bottom: -1px;
+      transform: rotate(45deg);
+    }
+
+    .search-hit {
+      outline: 2px solid #25d366;
+      outline-offset: 3px;
+      background-color: rgba(37,211,102,0.08);
+      border-radius: 4px;
+      transition: background-color 0.4s ease;
+    }
+
+    .hamburger-wrapper {
+      position: relative;
+      z-index: 210;
+    }
+
+    .hamburger {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .hamburger span {
+      display: block;
+      height: 3px;
+      border-radius: 999px;
+      background: #111827;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .hamburger.open span:nth-child(1) {
+      transform: translateY(4px) rotate(45deg);
+    }
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.open span:nth-child(3) {
+      transform: translateY(-4px) rotate(-45deg);
+    }
+
+    .nav-overlay {
+      position: fixed;
+      top: 60px;
+      right: 0;
+      width: min(80vw, 320px);
+      height: calc(100% - 60px);
+      background: #ffffff;
+      border-left: 1px solid #e5e7eb;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+      transform: translateX(100%);
+      opacity: 0;
+      visibility: hidden;
+      transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s ease;
+      z-index: 200;
+    }
+
+    .nav-overlay.open {
+      transform: translateX(0);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .nav-overlay-content { padding: 1.5rem 1.25rem; }
+
+    .nav-overlay-content a {
+      display: block;
+      color: #111827;
+      text-decoration: none;
+      font-size: 1rem;
+      margin: 0.4rem 0;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .nav-overlay-content a:last-child { border-bottom: none; }
+
+    .nav-overlay-content a:hover { color: #25d366; }
+
+    .hero {
+      background: transparent;
+      color: #111827;
+      padding: 3rem 0 3.5rem;
+    }
+
+    .hero-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .hero-text { flex: 1 1 260px; }
+
+    .hero-text h1 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      color: #25d366;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      opacity: 0.95;
+      margin-bottom: 0.8rem;
+      color: #111827;
+    }
+
+    .hero-text p {
+      margin-bottom: 1.2rem;
+      max-width: 460px;
+      color: #111827;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
+      font-size: 0.86rem;
+    }
+
+    .hero-badge {
+      border: 1px solid rgba(148,163,184,0.6);
+      border-radius: 999px;
+      padding: 0.25rem 0.75rem;
+      opacity: 0.92;
+      background: #ffffff;
+      color: #111827;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: #25d366;
+      color: #ffffff;
+      padding: 0.7rem 1.6rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-right: 0.6rem;
+    }
+
+    .btn-primary:hover { background: #1fb45a; }
+
+    .btn-ghost {
+      display: inline-block;
+      padding: 0.68rem 1.4rem;
+      border-radius: 4px;
+      border: 1px solid rgba(148,163,184,0.7);
+      color: #111827;
+      text-decoration: none;
+      font-weight: 500;
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .btn-ghost:hover { background: #f3f4f6; }
+
+    #heroReadMore {
+      margin-top: 1.2rem;
+      padding: 1rem 1.1rem;
+      border-radius: 8px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      display: none;
+      font-size: 0.94rem;
+      color: #111827;
+    }
+
+    #heroReadMore h3 {
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+      color: #25d366;
+    }
+
+    #heroReadMore ol {
+      margin-left: 1.1rem;
+      margin-top: 0.3rem;
+    }
+
+    #heroReadMore li { margin-bottom: 0.35rem; }
+
+    .hero-image {
+      flex: 1 1 260px;
+      display: flex;
+      justify-content: center;
+      background: transparent;
+    }
+
+    .hero-photo {
+      width: 100%;
+      max-width: 420px;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .hero-photo img { width: 100%; height: auto; display: block; }
+
+    .section {
+      padding: 2.5rem 0;
+      background: #ffffff;
+      color: #111827;
+    }
+
+    .section-alt {
+      background: #f9fafb;
+      color: #111827;
+    }
+
+    .section h2 {
+      font-size: 1.6rem;
+      margin-bottom: 0.6rem;
+      color: #25d366;
+    }
+
+    .section-lead {
+      color: #4b5563;
+      font-size: 0.98rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .section h3 {
+      font-size: 1.05rem;
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+      color: #25d366;
+    }
+
+    .section p {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      color: #111827;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0,1.4fr) minmax(0,1fr);
+      gap: 1.4rem;
+      margin-top: 0.6rem;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 1.2rem;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.08);
+      height: 100%;
+      border: 1px solid #e5e7eb;
+    }
+
+    .card h3 { margin-bottom: 0.4rem; color: #25d366; }
+
+    .card small {
+      display: block;
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-bottom: 0.3rem;
+    }
+
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 0.6rem;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1.0fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .gallery-item {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 0.8rem;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.08);
+      border: 1px solid #e5e7eb;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 0.4rem;
+    }
+
+    .gallery-item h3 {
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+      color: #25d366;
+    }
+
+    .gallery-item p {
+      font-size: 0.9rem;
+      color: #111827;
+    }
+
+    .feature-list,
+    .process-list,
+    .benefits-list {
+      margin-top: 0.5rem;
+      padding-left: 1.2rem;
+      font-size: 0.95rem;
+      color: #111827;
+    }
+
+    .feature-list li,
+    .process-list li,
+    .benefits-list li {
+      margin-bottom: 0.4rem;
+    }
+
+    .highlight-box {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+      border-left: 3px solid #25d366;
+      font-size: 0.9rem;
+      color: #111827;
+      margin-top: 0.5rem;
+    }
+
+    /* FOOTER BASE */
+    .site-footer {
+      background: #000000;
+      color: #ffffff;
+      padding-top: 2rem;
+      margin-top: 2rem;
+      border-top: 1px solid #111111;
+    }
+
+    .footer-inner {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .footer-block h3 {
+      margin-bottom: 0.6rem;
+      color: #ffffff;
+    }
+
+    .footer-block ul { list-style: none; }
+
+    .footer-block a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.92rem;
+    }
+
+    .footer-block a:hover { color: #1d4ed8; }
+
+    .footer-bottom {
+      text-align: center;
+      padding: 0.8rem 0;
+      border-top: 1px solid #111111;
+      font-size: 0.85rem;
+      color: #ffffff;
+    }
+
+    .footer-inner .footer-block {
+      background-color: #000000;
+      color: #ffffff;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .footer-inner .footer-block p,
+    .footer-inner .footer-block li {
+      color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+      .header-inner { gap: 0.75rem; }
+      .logo { width: 50px; height: 50px; }
+      .logo img { height: 40px; }
+      .header-right { gap: 0.6rem; }
+      .search-input { width: 90px; font-size: 0.8rem; }
+      .hero { padding: 2.2rem 0 2.6rem; }
+      .hero-inner { flex-direction: column; }
+      .hero-text h1 { font-size: 1.7rem; }
+      .hero-image { width: 100%; }
+      .two-col { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .nav-overlay {
+        top: 56px;
+        width: 260px;
+        max-width: 75vw;
+        height: calc(100% - 56px);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container { width: 92%; }
+      .hero-text h1 { font-size: 1.5rem; }
+      .search-input { width: 80px; font-size: 0.78rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SPLASH INTRO -->
+  <div id="splash" class="splash-overlay">
+    <div class="splash-year">COMING&nbsp;SOON</div>
+
+    <div class="splash-logo-box" id="splashLogoBox">
+      <!-- splash logo from your attachments -->
+      <img src="logo.png" alt="White Polymers splash logo">
+      <div class="splash-name">WHITE POLYMERS</div>
+      <div class="splash-tagline">Recycling PET for a cleaner tomorrow</div>
+      <div class="splash-spinner"></div>
+    </div>
+  </div>
+
+  <!-- SEARCH OVERLAY -->
+  <div id="searchOverlay" class="search-overlay">
+    <div class="search-overlay-logo">WHITE&nbsp;POLYMERS</div>
+    <div class="search-overlay-text">
+      Searching for <span id="searchQueryText"></span> …
+    </div>
+    <div class="search-overlay-spinner"></div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header fade-in delay-1">
+    <div class="container header-inner">
+      <div class="logo">
+        <!-- main site logo -->
+        <img src="logo.png" alt="White Polymers logo">
+      </div>
+
+      <div class="header-right">
+        <div class="search-box">
+          <input class="search-input" id="searchInput" type="text" placeholder="Search...">
+          <div class="search-icon" id="searchIcon"></div>
+        </div>
+        <div class="hamburger-wrapper">
+          <div class="hamburger" id="hamburgerBtn">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAV PANEL -->
+  <div class="nav-overlay" id="navOverlay">
+    <div class="nav-overlay-content">
+      <a href="#home">Home</a>
+      <a href="#about">Who We Are</a>
+      <a href="#applications">Applications</a>
+      <a href="#gallery">From Bottles</a>
+      <a href="#photos">Photos</a>
+      <a href="#features">Features</a>
+      <a href="#process">Process</a>
+      <a href="#export">Export</a>
+      <a href="#sustainability">Sustainability</a>
+      <a href="#quality">Quality Control</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <div class="container hero-inner">
+      <div class="hero-text fade-in delay-2">
+        <p class="hero-subtitle">From waste PET bottles to reliable industrial raw material</p>
+        <h1>Recycling PET for a Cleaner, Stronger Future</h1>
+        <p>
+          White Polymer Industries converts post‑consumer PET bottles into high‑quality recycled flakes
+          that power textile, packaging, and industrial supply chains in India and abroad. [file:4]
+        </p>
+        <div class="hero-badges">
+          <span class="hero-badge">High‑purity rPET flakes</span>
+          <span class="hero-badge">Textile &amp; packaging grade</span>
+          <span class="hero-badge">Supporting circular economy</span>
+        </div>
+        <a href="#contact" class="btn-primary">Request Flake Samples</a>
+        <button type="button" class="btn-ghost" id="heroReadMoreBtn" onclick="toggleHeroReadMore()">
+          Read More
+        </button>
+
+        <div id="heroReadMore">
+          <h3>Recycling Process Overview</h3>
+          <p class="section-lead">
+            The PET bottle‑to‑flake line is engineered to remove impurities step by step so that
+            only clean, stable PET reaches the final packing station. [file:4]
+          </p>
+          <ol>
+            <li>Collection and pre‑sorting of PET bottles by colour, size, and polymer type. [file:4]</li>
+            <li>Manual and optical sorting to remove metals, PVC, multilayer, and non‑PET items. [file:4]</li>
+            <li>Label and cap removal using mechanical separation, granulators, and pre‑wash systems. [file:4]</li>
+            <li>Crushing and shredding of bottles into controlled‑size flakes. [file:4]</li>
+            <li>Hot washing with friction, detergents, and caustic solution to remove glue and dirt. [file:4]</li>
+            <li>Float‑sink separation to separate PET from caps, labels, and light plastics. [file:4]</li>
+            <li>Rinsing and multi‑stage water treatment to remove chemicals and fines. [file:4]</li>
+            <li>Thermal drying to reach low moisture content suitable for extrusion or spinning. [file:4]</li>
+            <li>Screening, metal detection, and final inspection before silo storage or bag packing. [file:4]</li>
+          </ol>
+        </div>
+      </div>
+      <div class="hero-image fade-in delay-3">
+        <div class="hero-photo">
+          <!-- plant header image -->
+          <img src="img3.png" alt="Recycling plant header">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO WE ARE -->
+  <section id="about" class="section">
+    <div class="container fade-in">
+      <h2>Who We Are</h2>
+      <p class="section-lead">
+        White Polymer Industries is a PET bottle recycling unit based in Gujarat, India, dedicated to
+        turning local plastic waste into high‑value recycled PET flakes for global markets. [file:4]
+      </p>
+
+      <div class="two-col">
+        <div>
+          <h3>From Bottles to Flakes</h3>
+          <p>
+            The plant sources post‑consumer PET bottles from collection centers, scrap traders,
+            and organized waste networks, then converts them into consistently clean, dry flakes
+            suitable for fiber, strap, sheet, and non‑food packaging applications. [file:4]
+          </p>
+          <p>
+            Each batch is processed through controlled washing, separation, and drying steps to
+            minimize PVC, metal, paper, and other contaminants that can affect downstream
+            production performance. [file:4]
+          </p>
+          <h3>Mission &amp; Vision</h3>
+          <p>
+            The mission is to divert thousands of kilograms of PET from landfills and open
+            dumping every month, and to deliver reliable rPET feedstock that helps
+            customers reduce their dependence on virgin polymers. [file:4]
+          </p>
+          <p>
+            The long‑term vision is to support bottle‑to‑fiber and bottle‑to‑bottle
+            initiatives that keep material in continuous circulation and support India’s
+            sustainability and resource‑efficiency goals. [file:4]
+          </p>
+        </div>
+        <div>
+          <h3>Why PET Recycling Matters</h3>
+          <ul class="benefits-list">
+            <li>Conserves non‑renewable oil and gas used to make virgin PET resin. [file:4]</li>
+            <li>Reduces greenhouse‑gas emissions and energy consumption compared to producing new plastic. [file:4]</li>
+            <li>Prevents bottles from entering landfills, rivers, and oceans as long‑term waste. [file:4]</li>
+            <li>Creates jobs across collection, sorting, transport, and processing activities. [file:4]</li>
+          </ul>
+          <div class="highlight-box">
+            By choosing recycled PET flakes, brands can cut their plastic footprint while
+            meeting growing regulatory and consumer expectations for sustainable materials. [file:4]
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPLICATIONS -->
+  <section id="applications" class="section section-alt">
+    <div class="container fade-in">
+      <h2>Where Our Flakes Are Used</h2>
+      <p class="section-lead">
+        Cleaned and dried rPET flakes from White Polymer Industries are compatible with a wide
+        range of downstream processes in textiles, packaging, and industry. [file:4]
+      </p>
+
+      <div class="cards">
+        <div class="card">
+          <img src="img16.jpeg" alt="Polyester staple fibre">
+          <h3>Polyester Staple Fibre</h3>
+          <small>Spinning &amp; nonwoven applications</small>
+          <p>
+            A large share of recycled PET flakes is converted into polyester staple fibre (PSF)
+            for garments, home textiles, fillings, geotextiles, and nonwovens. [file:4]
+          </p>
+          <p>
+            Stable intrinsic viscosity and controlled moisture support smooth spinning,
+            uniform yarn strength, and reduced line interruptions in fibre plants. [file:4]
+          </p>
+        </div>
+
+        <div class="card">
+          <img src="img4.png" alt="Green PET straps coil">
+          <h3>PET Straps &amp; Monofilament</h3>
+          <small>Packaging and technical yarns</small>
+          <p>
+            High‑tensile PET straps made from rPET replace steel strapping for pallets,
+            bricks, tiles, and other heavy loads, offering corrosion‑free and safer
+            load securing. [file:4]
+          </p>
+          <p>
+            Processors also use flakes to produce monofilament yarns for brushes, nets,
+            industrial ropes, and technical textiles. [file:4]
+          </p>
+        </div>
+
+        <div class="card">
+          <img src="img18.jpeg" alt="rPET thermoforming sheet and trays">
+          <h3>Sheets, Thermoforming &amp; Non‑Food Packaging</h3>
+          <small>rPET sheets and trays</small>
+          <p>
+            rPET flakes can be extruded into transparent or coloured sheets that are later
+            thermoformed into blisters, clamshells, food‑service trays, and protective
+            packaging for consumer goods. [file:4]
+          </p>
+          <p>
+            Consistent bulk density and low contamination help maintain clarity and mechanical
+            properties of finished thermoformed products. [file:4]
+          </p>
+        </div>
+
+        <div class="card">
+          <img src="img17.jpeg" alt="Industrial PET applications">
+          <h3>Other Industrial Uses</h3>
+          <small>Blends and composites</small>
+          <p>
+            Recycled PET is increasingly used in construction composites, automotive parts,
+            3D‑printing filaments, and fibre‑reinforced materials where strength‑to‑weight
+            ratio and recyclability are important. [file:4]
+          </p>
+          <p>
+            These applications extend material life even further, supporting true
+            “waste‑to‑wealth” outcomes in the polymer value chain. [file:4]
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY: FROM BOTTLES TO FLAKES -->
+  <section id="gallery" class="section">
+    <div class="container fade-in">
+      <h2>From Bottles to Finished Goods</h2>
+      <p class="section-lead">
+        A visual snapshot of the core journey: from collected bottles to clean PET flakes and end products. [file:4]
+      </p>
+
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img src="img7.jpeg"
+               alt="Collected PET bottles mixed colours">
+          <h3>Collected PET Bottles</h3>
+          <p>Mixed‑colour PET bottles arriving from collection centres.</p>
+        </div>
+
+        <div class="gallery-item">
+          <img src="img10.jpeg"
+               alt="Colored PET flakes">
+          <h3>Cleaned PET Flakes </h3>
+          <p>Washed and dried flakes ready for fibre and strap plants.</p>
+        </div>
+
+        <div class="gallery-item">
+          <img src="img6.png" alt="White PET flakes">
+          <h3>Automated processing Line</h3>
+          <p>Crushers, washers and dryers removing labels and caps. </p>
+        </div>
+
+        <div class="gallery-item">
+          <img src="img11.jpeg"
+               alt="Green PET flakes">
+          <h3>Finished Goods from rPET</h3>
+          <p>Garments, straps and packaging made from recycled PET.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHOTOS -->
+  <section id="photos" class="section section-alt">
+    <div class="container fade-in">
+      <h2>Photos</h2>
+      <p class="section-lead">
+        Additional views of the White Polymer facility, processes, and rPET products. [file:2]
+      </p>
+
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img src="img19.jpeg"
+               alt="PET bottle sorting line">
+          <h3>Sorting Line</h3>
+          <p>Workers and sensors separate PET from other plastics. [file:2]</p>
+        </div>
+
+        <div class="gallery-item">
+          <img src="img13.jpeg"
+               alt="PET bottle bales yard">
+          <h3>Baled PET Bottles</h3>
+          <p>Compacted bales stored before feeding the recycling line. [file:2]</p>
+        </div>
+
+        <div class="gallery-item">
+          <img src="img12.jpeg"
+               alt="rPET fibre spools">
+          <h3>rPET Fibre Spools</h3>
+          <p>Continuous filaments and fibre produced from rPET flakes. [file:2]</p>
+        </div>
+
+        <div class="gallery-item">
+          <img src="img15.jpeg"
+               alt="rPET strap production line">
+          <h3>Strap Production</h3>
+          <p>High‑tensile rPET straps for pallets and brick bundles. [file:2]</p>
+        </div>
+      </div>
+
+      <div class="gallery-grid" style="margin-top:1.2rem;">
+        <div class="gallery-item">
+          <img src="img5.png"
+               alt="rPET sheet extrusion line">
+          <h3>Sheet Extrusion</h3>
+          <p>rPET sheets for thermoforming trays and blisters. [file:2]</p>
+        </div>
+
+        <div class="gallery-item">
+          <img src="img14.jpeg"
+               alt="rPET flakes jumbo bags">
+          <h3>Jumbo Bag Packing</h3>
+          <p>Flakes packed in jumbo bags for export and domestic use. [file:2]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FEATURES -->
+  <section id="features" class="section section-alt">
+    <div class="container fade-in">
+      <h2>Why Customers Choose Our Flakes</h2>
+      <p class="section-lead">
+        Industrial users demand stable, predictable raw material. White Polymer Industries
+        designs its process around consistency, cleanliness, and traceability. [file:4]
+      </p>
+      <ul class="feature-list">
+        <li>Controlled flake size distribution to support smooth feeding and melting. [file:4]</li>
+        <li>Low PVC and foreign‑polymer content to protect equipment. [file:4]</li>
+        <li>Multi‑stage washing and hot‑caustic treatment to remove contaminants. [file:4]</li>
+        <li>Moisture reduction to levels suitable for fibre and strap production. [file:4]</li>
+        <li>Sampling and testing for IV, colour and contamination batch‑wise. [file:4]</li>
+      </ul>
+      <div class="highlight-box">
+        The focus on process control and testing helps downstream processors run at higher
+        line speeds with fewer stoppages and waste, improving overall economics. [file:4]
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process" class="section">
+    <div class="container fade-in">
+      <h2>Recycling Process – Step by Step</h2>
+      <p class="section-lead">
+        The PET bottle‑to‑flake line is designed to remove impurities at each stage, so that
+        only clean, stable PET reaches the final packing station. [file:4]
+      </p>
+      <ol class="process-list">
+        <li>Collection and pre‑sorting of PET bottles. [file:4]</li>
+        <li>Manual and optical sorting to remove non‑PET items. [file:4]</li>
+        <li>Label and cap removal using mechanical separation. [file:4]</li>
+        <li>Crushing into flakes of controlled size. [file:4]</li>
+        <li>Hot washing with friction and detergents. [file:4]</li>
+        <li>Float‑sink separation of PET and light plastics. [file:4]</li>
+        <li>Rinsing and multi‑stage water treatment. [file:4]</li>
+        <li>Thermal drying to low moisture content. [file:4]</li>
+        <li>Screening, metal detection and final inspection. [file:4]</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- SUSTAINABILITY -->
+  <section id="sustainability" class="section section-alt">
+    <div class="container fade-in">
+      <h2>Sustainability &amp; Impact</h2>
+      <p class="section-lead">
+        Every tonne of recycled PET flakes produced helps avoid emissions, save energy,
+        and keep plastic out of landfills and open environments. [file:4]
+      </p>
+      <h3>Environmental Benefits</h3>
+      <ul class="benefits-list">
+        <li>Recycling PET can use significantly less energy than virgin production. [file:4]</li>
+        <li>Each recycled bottle is one less item in landfills or oceans. [file:4]</li>
+        <li>Reduced virgin plastic demand lowers fossil‑fuel extraction. [file:4]</li>
+      </ul>
+
+      <h3>Economic &amp; Social Value</h3>
+      <ul class="benefits-list">
+        <li>Recycling supply chains support many local jobs. [file:4]</li>
+        <li>Reliable rPET supply helps brands hit sustainability targets. [file:4]</li>
+        <li>Recycling capacity growth supports India’s circular economy. [file:4]</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- QUALITY -->
+  <section id="quality" class="section">
+    <div class="container fade-in">
+      <h2>Quality Control &amp; Testing</h2>
+      <p class="section-lead">
+        Quality begins at bottle collection and continues until the last bag of flakes is
+        sealed. Dedicated checks help protect converters and brand owners from variability. [file:4]
+      </p>
+      <h3>Incoming Bottles</h3>
+      <p>
+        Loads are inspected for excessive dirt, PVC, and non‑conforming material before
+        unloading, with suppliers guided on sorting requirements. [file:4]
+      </p>
+
+      <h3>In‑Process Monitoring</h3>
+      <ul class="benefits-list">
+        <li>Visual inspection of flakes for colour and foreign materials. [file:4]</li>
+        <li>Regular checks of moisture, bulk density and particle size. [file:4]</li>
+        <li>Intrinsic viscosity and contamination tests when required. [file:4]</li>
+      </ul>
+
+      <h3>Finished Goods</h3>
+      <p>
+        Each finished lot is labelled with batch details and key quality
+        indicators to enable full traceability. [file:4]
+      </p>
+    </div>
+  </section>
+
+  <!-- EXPORT -->
+  <section id="export" class="section section-alt">
+    <div class="container fade-in">
+      <h2>Domestic &amp; Export Supply</h2>
+      <p class="section-lead">
+        White Polymer Industries serves Indian processors as well as international buyers
+        who need consistent, traceable rPET flake supply. [file:4]
+      </p>
+      <p>
+        Flakes can be supplied in jumbo bags, small bags or bulk with
+        documentation on moisture, contamination levels and typical IV. [file:4]
+      </p>
+      <p>
+        The company works with textile mills, strap manufacturers, sheet extruders
+        and recyclers exploring bottle‑to‑bottle projects to match quality and
+        volume needs. [file:4]
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contact" class="site-footer">
+    <div class="container footer-inner fade-in">
+      <div class="footer-block">
+        <h3>Contact Detail</h3>
+        <p>Address: Survey No.246, Plot No.2, Aashundra Hanumanji Temple, Near Pragati Plast, Tankara‑363650, Gujarat, India. [file:4]</p>
+        <p>Email: <a href="mailto:whitepolymers2024@gmail.com">whitepolymers2024@gmail.com</a></p>
+        <p>Phone: <a href="tel:+919927770205">+91 99277 70205</a></p>
+      </div>
+      <div class="footer-block">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#about">Who We Are</a></li>
+          <li><a href="#applications">Applications</a></li>
+          <li><a href="#gallery">From Bottles</a></li>
+          <li><a href="#photos">Photos</a></li>
+          <li><a href="#process">Recycling Process</a></li>
+          <li><a href="#sustainability">Sustainability</a></li>
+          <li><a href="#quality">Quality Control</a></li>
+        </ul>
+      </div>
+      <div class="footer-block">
+        <h3>Why Recycled PET?</h3>
+        <p>
+          Using rPET helps reduce emissions, save energy, and show customers that
+          sustainability is part of every product you make. [file:4]
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2025 White Polymer Industries. All rights reserved. [file:4]
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    // Splash timings
+    window.addEventListener('load', function () {
+      const splash = document.getElementById('splash');
+      const splashLogoBox = document.getElementById('splashLogoBox');
+
+      setTimeout(function () {
+        splashLogoBox.classList.add('show-logo');
+      }, 2000);
+
+      setTimeout(function () {
+        splash.classList.add('splash-hidden');
+      }, 4000);
+    });
+
+    // Hamburger nav
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navOverlay = document.getElementById('navOverlay');
+
+    function closeOverlay() {
+      navOverlay.classList.remove('open');
+      hamburgerBtn.classList.remove('open');
+    }
+
+    hamburgerBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      navOverlay.classList.toggle('open');
+      hamburgerBtn.classList.toggle('open');
+    });
+
+    navOverlay.addEventListener('click', function (e) {
+      if (e.target.tagName === 'A') {
+        closeOverlay();
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!navOverlay.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+        closeOverlay();
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeOverlay();
+      }
+    });
+
+    // Hero read more
+    function toggleHeroReadMore() {
+      const box = document.getElementById('heroReadMore');
+      const btn = document.getElementById('heroReadMoreBtn');
+
+      if (box.style.display === 'none' || box.style.display === '') {
+        box.style.display = 'block';
+        btn.textContent = 'Read Less';
+      } else {
+        box.style.display = 'none';
+        btn.textContent = 'Read More';
+      }
+    }
+    window.toggleHeroReadMore = toggleHeroReadMore;
+
+    // SEARCH
+    const searchInput = document.getElementById('searchInput');
+    const searchIcon = document.getElementById('searchIcon');
+    const searchOverlayEl = document.getElementById('searchOverlay');
+    const searchQueryText = document.getElementById('searchQueryText');
+    let lastHit = null;
+    let searchInProgress = false;
+
+    function showSearchOverlay(query) {
+      searchQueryText.textContent = query;
+      searchOverlayEl.classList.add('show');
+    }
+
+    function hideSearchOverlay() {
+      searchOverlayEl.classList.remove('show');
+    }
+
+    function doActualSearch(query) {
+      if (lastHit) {
+        lastHit.classList.remove('search-hit');
+        lastHit = null;
+      }
+
+      const textCandidates = document.querySelectorAll('h1, h2, h3, p, li, small');
+      for (const el of textCandidates) {
+        const text = el.innerText.toLowerCase();
+        if (text.includes(query)) {
+          el.classList.add('search-hit');
+          lastHit = el;
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+      }
+
+      const imageCandidates = document.querySelectorAll('img[alt]');
+      for (const img of imageCandidates) {
+        const altText = img.alt.toLowerCase();
+        if (altText.includes(query)) {
+          const wrapper = img.closest('.gallery-item') || img.closest('.card') || img;
+          wrapper.classList.add('search-hit');
+          lastHit = wrapper;
+          wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+      }
+
+      alert('Not in this website');
+    }
+
+    function runSearch() {
+      if (searchInProgress) return;
+
+      const rawQuery = searchInput.value.trim();
+      if (!rawQuery) return;
+
+      const query = rawQuery.toLowerCase();
+      searchInProgress = true;
+
+      showSearchOverlay(rawQuery);
+
+      setTimeout(function () {
+        hideSearchOverlay();
+        doActualSearch(query);
+        searchInProgress = false;
+      }, 1200);
+    }
+
+    searchIcon.addEventListener('click', runSearch);
+    searchInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') runSearch();
+    });
+  </script>
+</body>
+</html>
